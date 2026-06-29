@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>🇬🇷 האנגלית שלי ביוון</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;700;800&family=Nunito:wght@700;800;900&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Heebo', sans-serif;
+    background: linear-gradient(160deg, #e8f4fd 0%, #c8e0f5 100%);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  header {
+    background: linear-gradient(135deg, #1a86d0, #0d5fa3);
+    color: white;
+    text-align: center;
+    padding: 10px 16px;
+    flex-shrink: 0;
+  }
+  header h1 { font-family: 'Nunito', sans-serif; font-size: 1.3rem; font-weight: 900; }
+
+  .tabs {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 8px 10px;
+    scrollbar-width: none;
+    background: white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    flex-shrink: 0;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    background: white;
+    border: 2px solid #1a86d0;
+    color: #1a86d0;
+    border-radius: 50px;
+    padding: 5px 13px;
+    font-size: 0.8rem;
+    font-family: 'Heebo', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .tab-btn.active { background: #1a86d0; color: white; }
+
+  /* NAV */
+  .nav-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 16px;
+    flex-shrink: 0;
+  }
+  .nav-btn {
+    background: #1a86d0;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 44px; height: 44px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 3px 10px rgba(26,134,208,0.3);
+    flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .nav-btn:active { transform: scale(0.9); }
+  .nav-btn:disabled { background: #ccc; box-shadow: none; }
+  .progress-bar { flex: 1; height: 7px; background: #dde; border-radius: 10px; overflow: hidden; }
+  .progress-fill { height: 100%; background: #1a86d0; border-radius: 10px; transition: width 0.3s; }
+  .counter { font-size: 0.8rem; color: #888; font-weight: 700; white-space: nowrap; }
+
+  /* CARD */
+  .card-area {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px 12px;
+    min-height: 0;
+  }
+
+  .flashcard {
+    background: white;
+    border-radius: 22px;
+    box-shadow: 0 6px 24px rgba(26,134,208,0.18);
+    border-top: 5px solid #1a86d0;
+    width: 100%;
+    max-width: 480px;
+    padding: 22px 24px 20px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+  }
+  .flashcard.emergency { border-top-color: #ff4444; }
+
+  .badge {
+    font-size: 0.72rem; font-weight: 700;
+    padding: 2px 12px; border-radius: 50px;
+  }
+  .badge.challenge { background: #FFD60A; color: #333; }
+  .badge.emergency-b { background: #ff4444; color: white; }
+  .badge.hidden { display: none; }
+
+  .sec-label { font-size: 0.78rem; color: #aaa; font-weight: 600; }
+
+  .english-text {
+    font-family: 'Nunito', sans-serif;
+    font-size: clamp(1.2rem, 4.5vw, 1.7rem);
+    font-weight: 900;
+    color: #0d5fa3;
+    direction: ltr;
+    line-height: 1.3;
+  }
+  .phonetic-text {
+    font-size: clamp(0.78rem, 2.8vw, 0.92rem);
+    color: #aaa; direction: ltr; font-style: italic;
+  }
+  .divider {
+    width: 55%; border: none;
+    border-top: 2px dashed #c8e0f5;
+    margin: 4px 0;
+  }
+  .hebrew-text {
+    font-size: clamp(1.05rem, 4vw, 1.45rem);
+    font-weight: 700; color: #222; line-height: 1.4;
+  }
+  .tip-text { font-size: 0.8rem; color: #888; }
+  .tap-hint { font-size: 0.82rem; color: #1a86d0; font-weight: 700; margin-top: 4px; }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<header><h1>🇬🇷 האנגלית שלי ביוון</h1></header>
+
+<div class="tabs" id="tabs"></div>
+
+<div class="nav-row">
+  <button class="nav-btn" id="btn-prev" onclick="navigate(-1)">‹</button>
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  <span class="counter" id="counter"></span>
+  <button class="nav-btn" id="btn-next" onclick="navigate(1)">›</button>
+</div>
+
+<div class="card-area">
+  <div class="flashcard" id="flashcard">
+    <div class="sec-label" id="card-section"></div>
+    <span class="badge hidden" id="card-badge"></span>
+    <div class="english-text" id="card-english"></div>
+    <div class="phonetic-text" id="card-phonetic"></div>
+    <hr class="divider hidden" id="card-divider">
+    <div class="hebrew-text hidden" id="card-hebrew"></div>
+    <div class="tip-text hidden" id="card-tip"></div>
+    <div class="tap-hint" id="tap-hint">👆 לחץ לתרגום</div>
+  </div>
+</div>
+
+<script>
+const ALL_CARDS = [
+  // אוכל
+  {sec_id:'breakfast',sec_label:'🍳 אוכל',badge:'',english:'Can I have some orange juice, please?',phonetic:'קֶן אַי הֶב סָם אוֹרֶ\'נג\' ג\'וּס, פְּלִיז?',hebrew:'אפשר לי קצת מיץ תפוזים, בבקשה?',tip:''},
+  {sec_id:'breakfast',sec_label:'🍳 אוכל',badge:'',english:'Where is the bread / butter / jam?',phonetic:'וֵר אִיז דָה בְּרֶד / בָּטֶר / ג\'ֶם?',hebrew:'איפה הלחם / החמאה / הריבה?',tip:''},
+  {sec_id:'breakfast',sec_label:'🍳 אוכל',badge:'',english:'Can I have another plate, please?',phonetic:'קֶן אַי הֶב אֶנָדֶר פְּלֵייט, פְּלִיז?',hebrew:'אפשר צלחת נוספת, בבקשה?',tip:''},
+  {sec_id:'breakfast',sec_label:'🍳 אוכל',badge:'',english:'Is this table free?',phonetic:'אִיז דִיס טֵייבְּל פְּרִי?',hebrew:'השולחן הזה פנוי?',tip:''},
+  {sec_id:'breakfast',sec_label:'🍳 אוכל',badge:'',english:'A table for four, please.',phonetic:'אֶ טֵייבְּל פוֹר פוֹר, פְּלִיז.',hebrew:'שולחן לארבעה, בבקשה.',tip:''},
+  {sec_id:'breakfast',sec_label:'🍳 אוכל',badge:'',english:'Can I see the menu, please?',phonetic:'קֶן אַי סִי דָה מֶנְיוּ, פְּלִיז?',hebrew:'אפשר לראות את התפריט, בבקשה?',tip:''},
+  {sec_id:'breakfast',sec_label:'🍳 אוכל',badge:'',english:'I would like a pizza / pasta / salad.',phonetic:'אַי וּד לַייק אֶ פִּיצָה / פָּסְטָה / סָלֶד.',hebrew:'אני רוצה פיצה / פסטה / סלט.',tip:''},
+  {sec_id:'breakfast',sec_label:'🍳 אוכל',badge:'',english:'I am allergic to nuts.',phonetic:'אַי אֶם אֶלֶרְג\'ִיק טוּ נָאטְס.',hebrew:'אני אלרגי/ת לאגוזים.',tip:'💡 חשוב מאוד לדעת!'},
+  {sec_id:'breakfast',sec_label:'🍳 אוכל',badge:'',english:'Can I have some water, please?',phonetic:'קֶן אַי הֶב סָם ווֹטֶר, פְּלִיז?',hebrew:'אפשר קצת מים, בבקשה?',tip:''},
+  {sec_id:'breakfast',sec_label:'🍳 אוכל',badge:'',english:'The check, please.',phonetic:'דָה צ\'ֶק, פְּלִיז.',hebrew:'החשבון, בבקשה.',tip:''},
+  {sec_id:'breakfast',sec_label:'🍳 אוכל',badge:'⭐ אתגר',english:'Excuse me, this is not what I ordered.',phonetic:'אֶקְסְקְיוּז מִי, דִיס אִיז נוֹט וואט אַי אוֹרְדֶרְד.',hebrew:'סליחה, זה לא מה שהזמנתי.',tip:''},
+  {sec_id:'breakfast',sec_label:'🍳 אוכל',badge:'',english:'Thank you! It was delicious!',phonetic:'תֶ\'ֶנְק יוּ! אִיט וואז דֵלִישֵס!',hebrew:'תודה! זה היה טעים!',tip:''},
+  // מילים שימושיות
+  {sec_id:'words',sec_label:'📝 מילים',badge:'',english:'Yes / No',phonetic:'יֶס / נוֹ',hebrew:'כן / לא',tip:''},
+  {sec_id:'words',sec_label:'📝 מילים',badge:'',english:'Please / Thank you',phonetic:'פְּלִיז / תֶ\'ֶנְק יוּ',hebrew:'בבקשה / תודה',tip:''},
+  {sec_id:'words',sec_label:'📝 מילים',badge:'',english:'Excuse me / Sorry',phonetic:'אֶקְסְקְיוּז מִי / סוֹרִי',hebrew:'סליחה / מצטער/ת',tip:''},
+  {sec_id:'words',sec_label:'📝 מילים',badge:'',english:'Hello / Goodbye',phonetic:'הֶלוֹ / גוּד בַּיי',hebrew:'שלום / להתראות',tip:''},
+  {sec_id:'words',sec_label:'📝 מילים',badge:'',english:'Good morning / Good evening',phonetic:'גוּד מוֹרְנִינְג / גוּד אִיוְנִינְג',hebrew:'בוקר טוב / ערב טוב',tip:''},
+  {sec_id:'words',sec_label:'📝 מילים',badge:'',english:'How are you?',phonetic:'הָאו אָר יוּ?',hebrew:'מה שלומך?',tip:''},
+  {sec_id:'words',sec_label:'📝 מילים',badge:'',english:'I don\'t understand.',phonetic:'אַי דוֹנְט אָנְדֶרְסְטֶנְד.',hebrew:'אני לא מבין/ה.',tip:''},
+  {sec_id:'words',sec_label:'📝 מילים',badge:'',english:'Can you speak slowly?',phonetic:'קֶן יוּ סְפִּיק סְלוֹוְלִי?',hebrew:'אפשר לדבר לאט?',tip:''},
+  {sec_id:'words',sec_label:'📝 מילים',badge:'',english:'Do you speak Hebrew?',phonetic:'דוּ יוּ סְפִּיק הִיבְּרוּ?',hebrew:'אתה מדבר עברית?',tip:'💡 לרוב יגידו לא!'},
+  {sec_id:'words',sec_label:'📝 מילים',badge:'',english:'One / Two / Three / Four',phonetic:'וָן / טוּ / תְ\'רִי / פוֹר',hebrew:'אחד / שניים / שלושה / ארבעה',tip:''},
+  {sec_id:'words',sec_label:'📝 מילים',badge:'',english:'Big / Small / Hot / Cold',phonetic:'בִּיג / סְמוֹל / הוֹט / קוֹלְד',hebrew:'גדול / קטן / חם / קר',tip:''},
+  // מונית
+  {sec_id:'taxi',sec_label:'🚕 מונית',badge:'',english:'To the [hotel name], please.',phonetic:'טוּ דָה [שם המלון], פְּלִיז.',hebrew:'למלון [שם], בבקשה.',tip:''},
+  {sec_id:'taxi',sec_label:'🚕 מונית',badge:'',english:'How much does it cost?',phonetic:'הָאו מָאץ\' דָּאז אִיט קוֹסְט?',hebrew:'כמה זה עולה?',tip:''},
+  {sec_id:'taxi',sec_label:'🚕 מונית',badge:'',english:'Stop here, please.',phonetic:'סְטוֹפּ הִיר, פְּלִיז.',hebrew:'עצור כאן, בבקשה.',tip:''},
+  {sec_id:'taxi',sec_label:'🚕 מונית',badge:'',english:'We are four people.',phonetic:'וִי אָר פוֹר פִּיפְּל.',hebrew:'אנחנו ארבעה אנשים.',tip:''},
+  {sec_id:'taxi',sec_label:'🚕 מונית',badge:'',english:'To the airport, please.',phonetic:'טוּ דָה אֶרְפּוֹרְט, פְּלִיז.',hebrew:'לשדה התעופה, בבקשה.',tip:''},
+  {sec_id:'taxi',sec_label:'🚕 מונית',badge:'',english:'To the beach, please.',phonetic:'טוּ דָה בִּיץ\', פְּלִיז.',hebrew:'לחוף הים, בבקשה.',tip:''},
+  {sec_id:'taxi',sec_label:'🚕 מונית',badge:'',english:'How long will it take?',phonetic:'הָאו לוֹנְג וִיל אִיט טֵייק?',hebrew:'כמה זמן ייקח?',tip:''},
+  {sec_id:'taxi',sec_label:'🚕 מונית',badge:'',english:'Keep the change.',phonetic:'קִיפּ דָה צ\'ֵיינְג\'.',hebrew:'שמור את העודף.',tip:''},
+  {sec_id:'taxi',sec_label:'🚕 מונית',badge:'⭐ אתגר',english:'Can you turn on the air conditioning?',phonetic:'קֶן יוּ טָרְן אוֹן דָה אֶר קוֹנְדִישֶׁנִינְג?',hebrew:'אפשר להדליק מזגן, בבקשה?',tip:''},
+  // מלון
+  {sec_id:'hotel',sec_label:'🛎️ מלון',badge:'',english:'Can I have more towels, please?',phonetic:'קֶן אַי הֶב מוֹר טָאוֶלְז, פְּלִיז?',hebrew:'אפשר עוד מגבות, בבקשה?',tip:''},
+  {sec_id:'hotel',sec_label:'🛎️ מלון',badge:'',english:'Our room number is ___.',phonetic:'אַואר רוּם נָמְבֶּר אִיז ___.',hebrew:'מספר החדר שלנו הוא ___.',tip:''},
+  {sec_id:'hotel',sec_label:'🛎️ מלון',badge:'',english:'The TV is not working.',phonetic:'דָה טִי-וִי אִיז נוֹט וָרְקִינְג.',hebrew:'הטלוויזיה לא עובדת.',tip:''},
+  {sec_id:'hotel',sec_label:'🛎️ מלון',badge:'',english:'Where is the elevator?',phonetic:'וֵר אִיז דָה אֶלֶוֶיטֶר?',hebrew:'איפה המעלית?',tip:''},
+  {sec_id:'hotel',sec_label:'🛎️ מלון',badge:'',english:'What time is breakfast?',phonetic:'וואט טַיים אִיז בְּרֶקְפַסְט?',hebrew:'מתי ארוחת הבוקר?',tip:''},
+  {sec_id:'hotel',sec_label:'🛎️ מלון',badge:'',english:'Where is the pool?',phonetic:'וֵר אִיז דָה פּוּל?',hebrew:'איפה הבריכה?',tip:''},
+  {sec_id:'hotel',sec_label:'🛎️ מלון',badge:'',english:'What is the Wi-Fi password?',phonetic:'וואט אִיז דָה וַאי-פַּאי פָּסְוֶרְד?',hebrew:'מה הסיסמה של ה-Wi-Fi?',tip:''},
+  {sec_id:'hotel',sec_label:'🛎️ מלון',badge:'',english:'I lost my room key.',phonetic:'אַי לוֹסְט מַי רוּם קִי.',hebrew:'איבדתי את מפתח החדר.',tip:''},
+  {sec_id:'hotel',sec_label:'🛎️ מלון',badge:'⭐ אתגר',english:'Can you help me? I need ___.',phonetic:'קֶן יוּ הֶלְפ מִי? אַי נִיד ___.',hebrew:'תוכל לעזור לי? אני צריך/ה ___.',tip:''},
+  // ניקיון
+  {sec_id:'cleaning',sec_label:'🧹 ניקיון',badge:'',english:'Can you please clean our room?',phonetic:'קֶן יוּ פְּלִיז קְלִין אַואר רוּם?',hebrew:'אפשר לנקות את החדר שלנו?',tip:''},
+  {sec_id:'cleaning',sec_label:'🧹 ניקיון',badge:'',english:'Please bring fresh towels.',phonetic:'פְּלִיז בְּרִינְג פְּרֶשׁ טָאוֶלְז.',hebrew:'תביא/י מגבות נקיות, בבקשה.',tip:''},
+  {sec_id:'cleaning',sec_label:'🧹 ניקיון',badge:'',english:'Not now, thank you.',phonetic:'נוֹט נָאו, תֶ\'ֶנְק יוּ.',hebrew:'לא עכשיו, תודה.',tip:''},
+  {sec_id:'cleaning',sec_label:'🧹 ניקיון',badge:'',english:'Please change the bed sheets.',phonetic:'פְּלִיז צ\'ֵיינְג\' דָה בֶד שִׁיטְס.',hebrew:'אפשר להחליף את הסדינים?',tip:''},
+  {sec_id:'cleaning',sec_label:'🧹 ניקיון',badge:'',english:'We need more toilet paper.',phonetic:'וִי נִיד מוֹר טוֹיְלֶט פֵּיפֶּר.',hebrew:'אנחנו צריכים עוד נייר טואלט.',tip:''},
+  {sec_id:'cleaning',sec_label:'🧹 ניקיון',badge:'⭐ אתגר',english:'Please come back in one hour.',phonetic:'פְּלִיז קָם בֶּק אִין וָן אָואר.',hebrew:'תבוא/י בעוד שעה, בבקשה.',tip:''},
+  // בריכה
+  {sec_id:'pool',sec_label:'🏊 בריכה',badge:'',english:'Are these chairs free?',phonetic:'אָר דִיז צ\'ֶרְז פְּרִי?',hebrew:'הכיסאות האלה פנויים?',tip:''},
+  {sec_id:'pool',sec_label:'🏊 בריכה',badge:'',english:'Can I have an ice cream, please?',phonetic:'קֶן אַי הֶב אֶן אַיס קְרִים, פְּלִיז?',hebrew:'אפשר גלידה, בבקשה?',tip:''},
+  {sec_id:'pool',sec_label:'🏊 בריכה',badge:'',english:'How deep is the pool?',phonetic:'הָאו דִיפּ אִיז דָה פּוּל?',hebrew:'כמה עמוקה הבריכה?',tip:''},
+  {sec_id:'pool',sec_label:'🏊 בריכה',badge:'',english:'Can we get two cold drinks?',phonetic:'קֶן וִי גֶט טוּ קוֹלְד דְּרִינְקְס?',hebrew:'אפשר שתי שתיות קרות, בבקשה?',tip:''},
+  {sec_id:'pool',sec_label:'🏊 בריכה',badge:'',english:'Where can I rent a beach umbrella?',phonetic:'וֵר קֶן אַי רֶנְט אֶ בִּיץ\' אָמְבְּרֶלֶה?',hebrew:'איפה אפשר לשכור שמשייה?',tip:''},
+  {sec_id:'pool',sec_label:'🏊 בריכה',badge:'',english:'Is the sea safe for swimming?',phonetic:'אִיז דָה סִי סֵייף פוֹר סְוִימִינְג?',hebrew:'הים בטוח לשחייה?',tip:''},
+  {sec_id:'pool',sec_label:'🏊 בריכה',badge:'⭐ אתגר',english:'Can you take a photo of us?',phonetic:'קֶן יוּ טֵייק אֶ פוֹטוֹ אוֹב אָס?',hebrew:'תוכל/י לצלם אותנו, בבקשה?',tip:''},
+  // חנות
+  {sec_id:'shop',sec_label:'🛍️ חנות',badge:'',english:'How much is this?',phonetic:'הָאו מָאץ\' אִיז דִיס?',hebrew:'כמה זה עולה?',tip:''},
+  {sec_id:'shop',sec_label:'🛍️ חנות',badge:'',english:'Do you have this in a different color?',phonetic:'דוּ יוּ הֶב דִיס אִין אֶ דִיפֶרֶנְט קָלֶר?',hebrew:'יש לך את זה בצבע אחר?',tip:''},
+  {sec_id:'shop',sec_label:'🛍️ חנות',badge:'',english:'I\'ll take this one, please.',phonetic:'אַי\'ל טֵייק דִיס וָן, פְּלִיז.',hebrew:'אקח את זה, בבקשה.',tip:''},
+  {sec_id:'shop',sec_label:'🛍️ חנות',badge:'',english:'Can I pay by card?',phonetic:'קֶן אַי פֵּי בַּי קָרְד?',hebrew:'אפשר לשלם בכרטיס?',tip:''},
+  {sec_id:'shop',sec_label:'🛍️ חנות',badge:'',english:'Where is the bathroom?',phonetic:'וֵר אִיז דָה בֵּית\'רוּם?',hebrew:'איפה השירותים?',tip:''},
+  {sec_id:'shop',sec_label:'🛍️ חנות',badge:'',english:'Do you have smaller / bigger size?',phonetic:'דוּ יוּ הֶב סְמוֹלֶר / בִּיגֶר סַייז?',hebrew:'יש מידה קטנה / גדולה יותר?',tip:''},
+  {sec_id:'shop',sec_label:'🛍️ חנות',badge:'',english:'Can I have a bag, please?',phonetic:'קֶן אַי הֶב אֶ בֶּג, פְּלִיז?',hebrew:'אפשר שקית, בבקשה?',tip:''},
+  {sec_id:'shop',sec_label:'🛍️ חנות',badge:'⭐ אתגר',english:'Is there a discount for kids?',phonetic:'אִיז דֵר אֶ דִיסְקָאוּנְט פוֹר קִידְז?',hebrew:'יש הנחה לילדים?',tip:''},
+  // טיולים
+  {sec_id:'tourist',sec_label:'🏛️ טיולים',badge:'',english:'How do I get to ___?',phonetic:'הָאו דוּ אַי גֶט טוּ ___?',hebrew:'איך מגיעים ל___?',tip:''},
+  {sec_id:'tourist',sec_label:'🏛️ טיולים',badge:'',english:'How much is the entrance ticket?',phonetic:'הָאו מָאץ\' אִיז דָה אֶנְטְרֶנְס טִיקֶט?',hebrew:'כמה עולה כרטיס כניסה?',tip:''},
+  {sec_id:'tourist',sec_label:'🏛️ טיולים',badge:'',english:'What time does it open / close?',phonetic:'וואט טַיים דָּאז אִיט אוֹפֶן / קְלוֹז?',hebrew:'מתי זה נפתח / נסגר?',tip:''},
+  {sec_id:'tourist',sec_label:'🏛️ טיולים',badge:'',english:'Can I take photos here?',phonetic:'קֶן אַי טֵייק פוֹטוֹז הִיר?',hebrew:'אפשר לצלם כאן?',tip:''},
+  {sec_id:'tourist',sec_label:'🏛️ טיולים',badge:'',english:'Where is the nearest bus stop?',phonetic:'וֵר אִיז דָה נִירֶסְט בָּס סְטוֹפּ?',hebrew:'איפה תחנת האוטובוס הקרובה?',tip:''},
+  {sec_id:'tourist',sec_label:'🏛️ טיולים',badge:'',english:'I am lost. Can you help me?',phonetic:'אַי אֶם לוֹסְט. קֶן יוּ הֶלְפ מִי?',hebrew:'אני אבוד/ה. תוכל לעזור לי?',tip:''},
+  {sec_id:'tourist',sec_label:'🏛️ טיולים',badge:'⭐ אתגר',english:'What is the history of this place?',phonetic:'וואט אִיז דָה הִיסְטְרִי אוֹב דִיס פְּלֵייס?',hebrew:'מה ההיסטוריה של המקום הזה?',tip:''},
+  // חירום
+  {sec_id:'emergency',sec_label:'🆘 חירום',badge:'🆘',english:'Help!',phonetic:'הֶלְפּ!',hebrew:'עזרה!',tip:'',is_emergency:true},
+  {sec_id:'emergency',sec_label:'🆘 חירום',badge:'🆘',english:'Call the police, please!',phonetic:'קוֹל דָה פּוֹלִיס, פְּלִיז!',hebrew:'תתקשר למשטרה!',tip:'💡 חירום ביוון: 112',is_emergency:true},
+  {sec_id:'emergency',sec_label:'🆘 חירום',badge:'🆘',english:'I need a doctor.',phonetic:'אַי נִיד אֶ דָּקְטֶר.',hebrew:'אני צריך/ה רופא.',tip:'',is_emergency:true},
+  {sec_id:'emergency',sec_label:'🆘 חירום',badge:'🆘',english:'I don\'t feel well.',phonetic:'אַי דוֹנְט פִּיל וֶל.',hebrew:'אני לא מרגיש/ה טוב.',tip:'',is_emergency:true},
+  {sec_id:'emergency',sec_label:'🆘 חירום',badge:'🆘',english:'I lost my passport.',phonetic:'אַי לוֹסְט מַי פָּסְפּוֹרְט.',hebrew:'איבדתי את הדרכון שלי.',tip:'',is_emergency:true},
+  {sec_id:'emergency',sec_label:'🆘 חירום',badge:'🆘',english:'Where is the nearest pharmacy?',phonetic:'וֵר אִיז דָה נִירֶסְט פָּרְמֶסִי?',hebrew:'איפה בית המרקחת הקרוב?',tip:'',is_emergency:true},
+  {sec_id:'emergency',sec_label:'🆘 חירום',badge:'🆘',english:'My name is ___ and I am from Israel.',phonetic:'מַי נֵיים אִיז ___ אֶנְד אַי אֶם פְּרוֹם אִיזְרֵייֶל.',hebrew:'שמי ___ ואני מישראל.',tip:'',is_emergency:true},
+];
+
+const SECTIONS = [
+  {id:'all',    label:'⭐ הכל'},
+  {id:'words',  label:'📝 מילים'},
+  {id:'breakfast',label:'🍳 אוכל'},
+  {id:'taxi',   label:'🚕 מונית'},
+  {id:'hotel',  label:'🛎️ מלון'},
+  {id:'cleaning',label:'🧹 ניקיון'},
+  {id:'pool',   label:'🏊 בריכה'},
+  {id:'shop',   label:'🛍️ חנות'},
+  {id:'tourist',label:'🏛️ טיולים'},
+  {id:'emergency',label:'🆘 חירום'},
+];
+
+let filtered = [...ALL_CARDS];
+let idx = 0;
+let revealed = false;
+
+function buildTabs() {
+  const tabs = document.getElementById('tabs');
+  SECTIONS.forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn' + (s.id==='all'?' active':'');
+    btn.textContent = s.label;
+    btn.addEventListener('click', () => selectSection(s.id, btn));
+    tabs.appendChild(btn);
+  });
+}
+
+function selectSection(id, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  filtered = id==='all' ? [...ALL_CARDS] : ALL_CARDS.filter(c=>c.sec_id===id);
+  idx = 0;
+  showCard();
+}
+
+function showCard() {
+  revealed = false;
+  const c = filtered[idx];
+
+  document.getElementById('flashcard').className = 'flashcard' + (c.is_emergency?' emergency':'');
+  document.getElementById('card-section').textContent = c.sec_label;
+  document.getElementById('card-english').textContent = c.english;
+  document.getElementById('card-phonetic').textContent = c.phonetic;
+  document.getElementById('card-hebrew').textContent = c.hebrew;
+
+  const badge = document.getElementById('card-badge');
+  if (c.badge) {
+    badge.textContent = c.badge;
+    badge.className = 'badge ' + (c.is_emergency ? 'emergency-b' : 'challenge');
+  } else {
+    badge.className = 'badge hidden';
+  }
+
+  const tip = document.getElementById('card-tip');
+  tip.textContent = c.tip || '';
+  tip.className = 'tip-text hidden';
+
+  document.getElementById('card-divider').className = 'divider hidden';
+  document.getElementById('card-hebrew').className = 'hebrew-text hidden';
+  document.getElementById('tap-hint').className = 'tap-hint';
+
+  document.getElementById('counter').textContent = (idx+1)+' / '+filtered.length;
+  const pct = filtered.length>1 ? (idx/(filtered.length-1))*100 : 100;
+  document.getElementById('progress-fill').style.width = pct+'%';
+  document.getElementById('btn-prev').disabled = idx===0;
+  document.getElementById('btn-next').disabled = idx===filtered.length-1;
+}
+
+function navigate(dir) {
+  const ni = idx+dir;
+  if (ni>=0 && ni<filtered.length) { idx=ni; showCard(); }
+}
+
+const fc = document.getElementById('flashcard');
+let startX = 0, startY = 0;
+
+fc.addEventListener('touchstart', e => {
+  startX = e.touches[0].clientX;
+  startY = e.touches[0].clientY;
+}, {passive:true});
+
+fc.addEventListener('touchend', e => {
+  const dx = Math.abs(e.changedTouches[0].clientX - startX);
+  const dy = Math.abs(e.changedTouches[0].clientY - startY);
+  if (dx < 20 && dy < 20) {
+    e.preventDefault();
+    toggleReveal();
+  }
+});
+
+function toggleReveal() {
+  revealed = !revealed;
+  document.getElementById('card-divider').className = 'divider' + (revealed?'':' hidden');
+  document.getElementById('card-hebrew').className = 'hebrew-text' + (revealed?'':' hidden');
+  document.getElementById('tap-hint').className = 'tap-hint' + (revealed?' hidden':'');
+  const c = filtered[idx];
+  if (c.tip) document.getElementById('card-tip').className = 'tip-text' + (revealed?'':' hidden');
+}
+
+buildTabs();
+showCard();
+</script>
+</body>
+</html>
